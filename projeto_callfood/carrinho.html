@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrinho de Compras</title>
+  <link rel="stylesheet" href="carrinho.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .conteudo { display: none; }
+
+    .carrinho-container { max-width: 960px; margin: 40px auto; padding: 16px; box-sizing: border-box; }
+    .item-carrinho { display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px solid #eee; }
+    .item-carrinho img { width:100px; height:100px; object-fit:cover; border-radius:8px; }
+    .detalhes { flex:1; }
+    .quantidade { display:flex; gap:8px; align-items:center; margin:8px 0; }
+    .quantidade button { padding:6px 10px; }
+    .remover { background:transparent; border:1px solid #d33; color:#d33; padding:6px 10px; border-radius:6px; cursor:pointer; }
+
+    /* remover todos */
+    .remover-todos { background:transparent; border:1px solid #999; color:#333; padding:6px 10px; border-radius:6px; cursor:pointer; margin-left:8px; }
+
+    /* botão confirmar (verde) */
+    .confirmar { background:#28a745; color:#fff; border:none; padding:10px 16px; border-radius:8px; cursor:pointer; font-weight:600; }
+
+    .total { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:16px; }
+    #loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: url('Molly Lester(GIF).gif') no-repeat center;
+      display: flex;
+      background-color: rgb(255, 255, 255);
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loader"></div>
+  <div class="conteudo">
+    <div class="carrinho-container">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+        <div><a href="1html.html"><i class="fa-solid fa-arrow-left"></i></a></div>
+        <h1 style="margin:0">Meu Carrinho</h1>
+        <button id="removerTodos" class="remover-todos">Remover todos</button>
+      </div>
+
+      <div id="itensDoCarrinho">
+        <!-- itens serão renderizados aqui via JS a partir de localStorage -->
+      </div>
+
+      <div class="total">
+        <h2>Total: R$ <span id="total-geral">0.00</span></h2>
+        <div>
+          <button class="confirmar" id="confirmarCompra">Confirmar Compra</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Lógica do carrinho: renderiza a partir de localStorage, calcula total, remove, remove todos
+    function getCart() { try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch(e){return [];} }
+    function saveCart(cart) { localStorage.setItem('cart', JSON.stringify(cart)); }
+
+    function renderCart() {
+      const container = document.getElementById('itensDoCarrinho');
+      container.innerHTML = '';
+      const cart = getCart();
+      if (!cart || cart.length === 0) {
+        container.innerHTML = '<p>Seu carrinho está vazio.</p>';
+        return;
+      }
+      cart.forEach((p, idx) => {
+        const div = document.createElement('div');
+        div.className = 'item-carrinho';
+        div.innerHTML = `<img src="${p.img||'https://via.placeholder.com/100'}" alt="${p.name}">`+
+          `<div class="detalhes">`+
+          `<h2>${p.name}</h2>`+
+          `<p>Preço: R$ <span class="valor-unitario">${Number(p.price).toFixed(2)}</span></p>`+
+          `<div class="quantidade"><button class="menos">-</button><span class="quantidade-valor">${p.quantity||1}</span><button class="mais">+</button></div>`+
+          `<button class="remover">Remover</button></div>`;
+        container.appendChild(div);
+      });
+    }
+
+    function atualizarTotal() {
+      let total = 0;
+      const cart = getCart();
+      cart.forEach(p => { total += (Number(p.price)||0) * (p.quantity||1); });
+      document.getElementById('total-geral').textContent = total.toFixed(2);
+    }
+
+    function bindItemEvents(root) {
+      root.querySelectorAll('.mais').forEach((btn, i) => {
+        btn.onclick = function() {
+          const container = this.closest('.item-carrinho');
+          const name = container.querySelector('h2').textContent;
+          const cart = getCart();
+          const item = cart.find(x=>x.name===name);
+          if (item) item.quantity = (item.quantity||1) + 1;
+          saveCart(cart); renderCart(); bindItemEvents(document); atualizarTotal();
+        }
+      });
+      root.querySelectorAll('.menos').forEach((btn, i) => {
+        btn.onclick = function() {
+          const container = this.closest('.item-carrinho');
+          const name = container.querySelector('h2').textContent;
+          const cart = getCart();
+          const item = cart.find(x=>x.name===name);
+          if (item) item.quantity = Math.max(1, (item.quantity||1)-1);
+          saveCart(cart); renderCart(); bindItemEvents(document); atualizarTotal();
+        }
+      });
+      root.querySelectorAll('.remover').forEach(btn => {
+        btn.onclick = function() {
+          const container = this.closest('.item-carrinho');
+          const name = container.querySelector('h2').textContent;
+          let cart = getCart();
+          cart = cart.filter(x=>x.name!==name);
+          saveCart(cart); renderCart(); bindItemEvents(document); atualizarTotal();
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const conteudo = document.querySelector('.conteudo');
+      const removerTodos = document.getElementById('removerTodos');
+      const confirmar = document.getElementById('confirmarCompra');
+      const overlay = document.getElementById('paymentOverlay');
+
+      // renderiza a partir do localStorage e vincula eventos
+      renderCart();
+      bindItemEvents(document);
+      atualizarTotal();
+
+      removerTodos.addEventListener('click', function() {
+        saveCart([]); renderCart(); bindItemEvents(document); atualizarTotal();
+      });
+
+      // delega o clique do confirmar ao payment.js que está incluído
+
+      // Caso loader.js já esconda o loader e mostre .conteudo, não precisamos fazer nada aqui.
+      const loader = document.getElementById('loader');
+      if (!loader || loader.style.display === 'none') {
+        if (conteudo) conteudo.style.display = 'block';
+      }
+    });
+  </script>
+
+  <script src="loader.js"></script>
+  <script src="payment.js"></script>
+
+</body>
+</html>

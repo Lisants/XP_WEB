@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastro - FoodLovers</title>
+  <link rel="stylesheet" href="Cadastros.css">
+  <style>.back-link {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 1001;
+      
+    }
+    .back-link a i {
+      background: rgba(255,255,255,0.85);
+      padding: 8px 16px;;
+      border-radius: 1px;
+      color: #222;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      position: fixed;
+      
+    }
+    </style>
+</head>
+<body>
+
+  <!-- Formulário com modo de login e modo de cadastro -->
+  <form id="cadastroForm">
+    <!-- Modo login por padrão -->
+    <div id="loginFields">
+      <main class="container">
+       
+      <h1 >Bem-vindo ao Callfood</h1>
+      <hr>
+      <h4>Faça seu login ou crie uma conta</h4>
+      <br>
+      <label>Email: <input type="email" name="email" required></label>
+      
+      <br><br>
+      
+      <label>Senha: <input type="password" name="senha" required></label>
+      
+      <br><br><br>
+      <div class="actions">
+        
+        
+        <button type="button" id="loginBtn">Login</button>
+        
+        <button type="button" id="showRegisterBtn">Criar conta</button>
+        
+        <button type="button" id="forgotBtn">Esqueci a senha</button>
+        <div class="back-link"><a href="1html.html"><i class="fa-solid fa-arrow-left"></i></a></div>
+      </div>
+    </div>
+  </main>
+    <!-- Modo cadastro (oculto inicialmente) -->
+    <div id="registerFields" style="display:none;">
+      <main class="container">
+      <H1>Cadastro</H1>
+      <hr>
+      <br>
+      <label>Nome: <input type="text" name="nome" required></label>
+      <br><br>
+      <label>Email: <input type="email" name="regEmail" required></label>
+      <br><br>
+      <!-- telefone com botão para enviar código de verificação -->
+      <label>Senha: <input type="password" name="regSenha" required></label>
+      <br><br>
+      <label>Confirmar Senha: <input type="password" name="regSenhaConfirm" required></label>
+      <br><br>
+      
+      <label for="telefone">Numero de telefone: 
+       
+        <input id="telefone" type="tel" name="telefone" inputmode="tel" placeholder="+55 11 99999-8888" required>
+        <button type="button" id="sendCodeBtn">Enviar código</button>
+      
+      </label>
+      <br><br>
+
+      <!-- seção de verificação (oculta até envio) -->
+      <div id="verifySection" style="display:none; margin-top:0.5rem;">
+        
+        
+        <label for="verifyCode">Insira o código recebido por SMS:</label>
+        
+        
+        <label for="verifyCode">
+          
+          <input id="verifyCode" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456" aria-label="Código de verificação">
+        
+        </label>
+      
+      
+      
+        <div class="actions">
+          
+          
+          <button type="button" id="verifyCodeBtn">Verificar código</button>
+        
+        
+        </div>
+      </div>
+
+      
+      
+
+      
+      
+      
+      <div class="actions">
+        
+        
+        
+        
+        <button type="button" id="createAccountBtn">Criar conta</button>
+        <button type="button" id="cancelRegisterBtn">Cancelar</button>
+      
+      
+      
+      
+      
+      </div>
+    </div>
+  </form>
+</main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    // utilitário SHA-256
+    async function sha256hex(str){
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('cadastroForm');
+      const loginFields = document.getElementById('loginFields');
+      const registerFields = document.getElementById('registerFields');
+      const showRegisterBtn = document.getElementById('showRegisterBtn');
+      const cancelRegisterBtn = document.getElementById('cancelRegisterBtn');
+      const loginBtn = document.getElementById('loginBtn');
+      const createAccountBtn = document.getElementById('createAccountBtn');
+      const forgotBtn = document.getElementById('forgotBtn');
+
+      // novos elementos para verificação de telefone
+      const sendCodeBtn = document.getElementById('sendCodeBtn');
+      const verifySection = document.getElementById('verifySection');
+      const verifyCodeInput = document.getElementById('verifyCode');
+      const verifyCodeBtn = document.getElementById('verifyCodeBtn');
+
+      showRegisterBtn.addEventListener('click', function() {
+        loginFields.style.display = 'none';
+        registerFields.style.display = 'block';
+      });
+
+      cancelRegisterBtn.addEventListener('click', function() {
+        registerFields.style.display = 'none';
+        loginFields.style.display = 'block';
+      });
+
+      // gerador simples de código de 6 dígitos (APENAS para demo)
+      function generateCode() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+      }
+
+      // envia código (simulado): armazena no sessionStorage e mostra a seção de verificação
+      sendCodeBtn.addEventListener('click', function() {
+        const phone = form.telefone ? form.telefone.value.trim() : '';
+        if (!phone) { alert('Informe o número de telefone'); return; }
+        const code = generateCode();
+        const expires = Date.now() + 5 * 60 * 1000; // válido por 5 minutos
+        sessionStorage.setItem('phoneVerifyCode', code);
+        sessionStorage.setItem('phoneVerifyExpires', String(expires));
+        sessionStorage.setItem('phoneToVerify', phone);
+        // Mostrar a seção e torná-la acessível
+        verifySection.style.display = 'block';
+        verifySection.setAttribute('aria-hidden', 'false');
+        // garantir que o usuário veja o input e possa digitar
+        try {
+          verifySection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } catch (e) {
+          // fallback
+          verifyCodeInput.scrollIntoView();
+        }
+        verifyCodeInput.focus();
+        console.log('verifySection exibida para', phone);
+        // Simulação: mostrar código em um alerta. Em produção envie via SMS por backend.
+        alert('Código de verificação (simulado): ' + code);
+      });
+
+      verifyCodeBtn.addEventListener('click', function() {
+        const entered = verifyCodeInput.value.trim();
+        const expected = sessionStorage.getItem('phoneVerifyCode');
+        const expires = Number(sessionStorage.getItem('phoneVerifyExpires') || '0');
+        if (!entered) { alert('Informe o código recebido'); return; }
+        if (Date.now() > expires) { alert('Código expirado. Solicite um novo.'); return; }
+        if (entered === expected) {
+          alert('Número verificado com sucesso');
+          // criar campo hidden indicando verificação
+          let hid = form.querySelector('input[name="phoneVerified"]');
+          if (!hid) {
+            hid = document.createElement('input');
+            hid.type = 'hidden';
+            hid.name = 'phoneVerified';
+            form.appendChild(hid);
+          }
+          hid.value = '1';
+          // opcional: desabilitar botões de envio/verificação
+          sendCodeBtn.disabled = true;
+          verifyCodeInput.value = '';
+          verifySection.style.display = 'none';
+        } else {
+          alert('Código inválido');
+        }
+      });
+
+      loginBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        const email = form.email.value.trim().toLowerCase();
+        const senha = form.senha.value;
+        if (!email || !senha) { alert('E necessario que seja preenchido o email e senha'); return; }
+        const stored = localStorage.getItem('user:'+email);
+        if (!stored) { alert('Usuário não encontrado. Crie uma conta primeiro.'); return; }
+        try {
+          const user = JSON.parse(stored);
+          const hash = await sha256hex(senha);
+          if (hash !== user.passHash) { alert('Credenciais inválidas'); return; }
+          // login ok
+          if (user.name) sessionStorage.setItem('userName', user.name);
+          sessionStorage.setItem('userEmail', user.email);
+          sessionStorage.setItem('registered', 'true');
+          window.location.href = 'user.html';
+        } catch (err) {
+          console.error(err);
+          alert('Erro ao processar login');
+        }
+      });
+
+      // criar conta passa a exigir verificação do telefone
+      createAccountBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        const nome = form.nome.value ? form.nome.value.trim() : '';
+        const email = form.regEmail.value ? form.regEmail.value.trim().toLowerCase() : '';
+        const senha = form.regSenha.value;
+        const senhaConf = form.regSenhaConfirm.value;
+        if (!nome || !email || !senha || !senhaConf) { alert('Preencha todos os campos'); return; }
+        if (senha !== senhaConf) { alert('As senhas não coincidem.'); return; }
+        // verificar se o telefone foi validado
+        const phoneVerified = form.querySelector('input[name="phoneVerified"]');
+        if (!phoneVerified || phoneVerified.value !== '1') { alert('Verifique seu número de telefone antes de criar a conta.'); return; }
+        const key = 'user:'+email;
+        if (localStorage.getItem(key)) { alert('Já existe uma conta com esse email. Faça login.');
+          // volta ao login automático
+          registerFields.style.display = 'none'; loginFields.style.display = 'block';
+          return;
+        }
+        try {
+          const passHash = await sha256hex(senha);
+          const userObj = { name: nome, email: email, passHash: passHash };
+          localStorage.setItem(key, JSON.stringify(userObj));
+          // auto-login após cadastro
+          sessionStorage.setItem('userName', nome);
+          sessionStorage.setItem('userEmail', email);
+          sessionStorage.setItem('registered', 'true');
+          window.location.href = 'user.html';
+        } catch (err) {
+          console.error(err);
+          alert('Erro ao criar conta');
+        }
+      });
+      
+      // Fluxo simples de 'esqueci a senha' para demo: pergunta email e nova senha, atualiza localStorage
+      forgotBtn.addEventListener('click', async function() {
+        const emailInput = prompt('Informe o email cadastrado para resetar a senha:');
+        if (!emailInput) return; // cancelado
+        const email = emailInput.trim().toLowerCase();
+        const key = 'user:' + email;
+        const stored = localStorage.getItem(key);
+        if (!stored) { alert('Conta não encontrada para esse email.'); return; }
+        const nova = prompt('Digite a nova senha:');
+        if (!nova) { alert('Operação cancelada'); return; }
+        const confirma = prompt('Confirme a nova senha:');
+        if (nova !== confirma) { alert('As senhas não coincidem.'); return; }
+        try {
+          const passHash = await sha256hex(nova);
+          const user = JSON.parse(stored);
+          user.passHash = passHash;
+          localStorage.setItem(key, JSON.stringify(user));
+          alert('Senha alterada com sucesso. Faça login com a nova senha.');
+        } catch (err) {
+          console.error(err);
+          alert('Erro ao alterar senha');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

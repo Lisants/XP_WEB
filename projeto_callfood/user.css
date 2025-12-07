@@ -1,0 +1,139 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #03070a;
+    color: #f9f9f9;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.imagem{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('pizz.jpg') no-repeat center;
+    background-size: contain;
+    z-index: 0;
+    opacity: 0.3;
+}
+
+  .profile-container {
+    position: relative;
+    z-index:1;
+    max-width: 700px;
+    margin: 40px auto;
+    background: rgba(255,255,255,0.85); /* fundo semi-transparente */
+    padding: 30px 0;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  
+  .profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+    z-index: 1;
+  }
+  .logout{
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: none;
+    padding: 5px 10px;
+    position: absolute;
+    bottom: 0.1px;
+    left:18px;
+    background: none;
+    z-index: 5;
+  }
+  .logout:active {
+  transform: scale(0.95);
+  transition: transform 0.1s;
+}
+  
+  .profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+    border: 4px solid #5900ff;
+  }
+  
+  .profile-header h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+  }
+  
+  .profile-header p {
+    font-size: 14px;
+    color: #e20707;
+    margin-bottom: 15px;
+  }
+  
+  .edit-btn {
+    background-color: #5900ff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .edit{
+      background-color: #5900ff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+
+  .edit-btn:hover {
+    background-color: #e70000;
+  }
+  
+  .profile-info,
+  .profile-preferences,
+  .recent-orders {
+    margin-bottom: 25px;
+  }
+  
+  h2 {
+    color: #5900ff;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  ul {
+    list-style: none;
+  }
+  
+  ul li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  
+  i{
+    color: 5900ff;
+  }
+
+  a{
+    text-decoration: none;
+    color: inherit;
+    font-size: 30px;
+  }
+  .username{
+    color: 5900ff;
+    margin-bottom: 15px;
+  }

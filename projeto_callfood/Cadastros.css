@@ -1,0 +1,20 @@
+/* Definir a imagem como fundo do site (body) */
+body{         
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        background-image: url("cdca0080-54c0-4900-b12f-79793af7013e.jpg");
+        background-size: cover;
+        background-position: center;
+        font-family: Arial, sans-serif;
+}
+.container{
+        background-color: rgb(255, 255, 255);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 420px;
+        border: 2px solid black;
+}

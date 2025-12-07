@@ -1,0 +1,214 @@
+<!DOCTYPE html>    <html lang="pt-BR">
+
+
+<head>
+  
+  <meta charset="UTF-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Food browser</title>
+  
+  <link rel="icon" href="" type="">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="1style.css">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  
+  <style>
+    /* garante que o wrapper ocupe a tela e empurra o footer para baixo sem afetar .menu */
+    html, body { height: 100%; margin: 0; }
+    body { min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 80px; }
+    .page-wrap { flex: 1 0 auto; }
+    footer { flex-shrink: 0; margin-top: auto; }
+
+    /* Fallback: manter o footer fixo na base da janela para evitar posicionamento no meio */
+    footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      z-index: 999;
+    }
+
+    /* garantir que cada card tenha layout em coluna e altura consistente */
+    .menu .item {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-height: 320px; /* ajuste conforme necessário para alinhar os botões */
+      box-sizing: border-box;
+    }
+    /* empurra as ações para o fim do card, alinhando Y entre os cards */
+    .item-actions { margin-top: auto; display: flex; gap: 8px; }
+    .item-actions button { padding: 8px 10px; border-radius: 6px; cursor: pointer; border: 1px solid #c68600; background: #ffd700; color: #000; transition: background-color 0.18s ease, color 0.18s ease, transform 0.08s ease; }
+    .item-actions button:hover { background: #e53935; color: #fff; border-color: #b71c1c; transform: translateY(-2px); }
+
+    /* imagens com altura fixa para alinhar os títulos entre os cards */
+    .menu .item img {
+      width: 100%;
+      height: 160px; /* altura fixa - ajuste conforme necessário */
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+    }
+    /* espaçamentos consistentes para título e texto */
+    .menu .item h2 { margin: 12px 0 8px; font-size: 1.1rem; }
+    .menu .item p { margin: 0 0 12px; flex: 0 0 auto; color: #333; }
+    /* aumentar levemente altura mínima para garantir espaço */
+    .menu .item { min-height: 360px; }
+  </style>
+
+
+
+</head>
+
+
+<body>
+  
+  <div class="page-wrap">
+    
+     <div class="imagem"></div>
+
+
+     <header style="background-color: rgb(170, 16, 16);">
+      <div class="barber-pole left"></div>
+      <div class="barber-pole right"></div>
+      <h1 style="font-size: 90px;">Call Food</h1>
+      <div class="iuser">
+      <a href="user.html"><i class="fa-solid fa-user" ></i></a> 
+      <a href="carrinho.html"><i class="fa fa-shopping-cart"></i></a>
+      </div>
+     </header>
+
+  <section class="menu">
+    
+    <div class="item">
+      
+      <img src="ialmoço.jpg" alt="Almoço">
+      <h2>Almoço Completo</h2>
+      <p>Arroz, feijão, bife acebolado, batata frita e salada fresca. Sabor de casa!</p>
+      
+      <div class="item-actions">
+        <button class="add-cart" data-name="Almoço Completo" data-price="49.90" data-img="ialmoço.jpg">Adicionar ao carrinho</button>
+        <button class="buy-now" data-name="Almoço Completo" data-price="49.90" data-img="ialmoço.jpg">Comprar agora</button>
+      </div>
+
+    </div>
+  
+    <div class="item">
+      <img src="images (15).jpeg" alt="Café da Manhã">
+      <h2>Café da Manhã</h2>
+      <p>Pão na chapa, ovos mexidos, suco natural e café forte. Comece bem o dia!</p>
+      
+      <div class="item-actions">
+        <button class="add-cart" data-name="Café da Manhã" data-price="24.90" data-img="images (15).jpeg">Adicionar ao carrinho</button>
+        <button class="buy-now" data-name="Café da Manhã" data-price="24.90" data-img="images (15).jpeg">Comprar agora</button>
+      </div>
+
+    </div>
+
+    <div class="item">
+      <img src="sobremesa.jpg" alt="Sobremesa">
+      <h2>Sobremesa</h2>
+      <p>Bolo de chocolate com calda quente, ou mousse de maracujá geladinha.</p>
+      
+      <div class="item-actions">
+        <button class="add-cart" data-name="Sobremesa" data-price="19.90" data-img="sobremesa.jpg">Adicionar ao carrinho</button>
+        <button class="buy-now" data-name="Sobremesa" data-price="19.90" data-img="sobremesa.jpg">Comprar agora</button>
+      </div>
+
+    </div>
+
+    <div class="item">
+      <img src="images (14).jpeg" alt="Lanche da Tarde">
+      <h2>Lanche da Tarde</h2>
+      <p>X-tudo com batata e refri ou uma tapioca de frango com queijo.</p>
+      
+      <div class="item-actions">
+        <button class="add-cart" data-name="Lanche da Tarde" data-price="29.90" data-img="images (14).jpeg">Adicionar ao carrinho</button>
+        <button class="buy-now" data-name="Lanche da Tarde" data-price="29.90" data-img="images (14).jpeg">Comprar agora</button>
+      </div>
+
+    </div>
+
+    <div class="item">
+      <img src="images (11).jpeg" alt="Jantar">
+      <h2>Jantar</h2>
+      <p>Macarrão com legumes, grelhado e suco detox. Leve, mas saboroso!</p>
+      
+      <div class="item-actions">
+        <button class="add-cart" data-name="Jantar" data-price="39.90" data-img="images (11).jpeg">Adicionar ao carrinho</button>
+        <button class="buy-now" data-name="Jantar" data-price="39.90" data-img="images (11).jpeg">Comprar agora</button>
+      </div>
+
+    </div>
+    
+    <div class="item">
+      <img src="images.png" alt="Promoção" />
+      <h2>Imperdível </h2>
+      <p>
+        Promoção por tempo limitado, as promoções mais saborosas que você só encontra aqui na Call Food
+      </p>
+    </div>
+
+  </section>
+  
+  <script>
+    // Isso aqui e o pause e o despause do barberpole
+    document.querySelectorAll('.barber-pole').forEach(function(pole) {
+      pole.onclick = function() {
+        this.style.animationPlayState =
+          this.style.animationPlayState === 'paused' ? 'running' : 'paused';
+      };
+    });
+  </script>
+
+
+
+  <!-- Comando de loader ao iniciar -->
+  <script src="loader.js"></script>  
+  
+  
+  
+  <script>
+    function saveCart(cart) { localStorage.setItem('cart', JSON.stringify(cart)); }
+    function getCart() { try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch(e){return [];} }
+
+    document.addEventListener('click', function(e) {
+      const add = e.target.closest('.add-cart');
+      const buy = e.target.closest('.buy-now');
+      const isRegistered = sessionStorage.getItem('registered') === 'true';
+      if (add) {
+        if (!isRegistered) { alert('Faça login para adicionar ao carrinho.'); window.location.href = 'Cadastro.html'; return; }
+        const name = add.dataset.name;
+        const price = parseFloat(add.dataset.price) || 0;
+        const img = add.dataset.img || '';
+        const cart = getCart();
+        const existing = cart.find(p => p.name === name);
+        if (existing) existing.quantity = (existing.quantity||1)+1; else cart.push({name, price, img, quantity:1});
+        saveCart(cart);
+        alert('Adicionado ao carrinho: '+name);
+      }
+      if (buy) {
+        if (!isRegistered) { alert('Faça login para comprar.'); window.location.href = 'Cadastro.html'; return; }
+        const name = buy.dataset.name;
+        const price = parseFloat(buy.dataset.price) || 0;
+        const img = buy.dataset.img || '';
+        const cart = [{name, price, img, quantity:1}];
+        saveCart(cart);
+        window.location.href = 'carrinho.html';
+      }
+    });
+  </script>
+  
+  <footer style="color: black; background-color: rgb(170, 16, 16); ">
+     <p>&copy; 2025 CALL FOOD - Entrega diretamente do mago!</p>
+  </footer>
+
+</body>
+</html>

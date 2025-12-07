@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil do Usuário - FoodLovers</title>
+  <link rel="stylesheet" href="user.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    #loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: url('Molly Lester(GIF).gif') no-repeat center;
+      display: flex;
+      background-color: rgb(255, 255, 255);
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+  </style>
+  <style>
+    /* botão voltar posicionado fora do bloco de perfil */
+    /* Comentário: os estilos do botão 'voltar' (.back-link) estão definidos aqui no head de user.html */
+    .back-link {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 1001;
+    }
+    .back-link a i {
+      background: rgba(255,255,255,0.85);
+      padding: 4px 8px;;
+      border-radius: 8px;
+      color: #222;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      position: fixed;
+    }
+  </style>
+ </head>
+ <body>
+   <button class="logout" id="log-out" style="display: none;">Deslogar</button>
+   <butto class="suporte"></butto>  
+    <div class="back-link"><a href="1html.html"><i class="fa-solid fa-arrow-left"></i></a></div>
+   <div class="imagem"></div>
+   <div id="loader"></div>
+   <div class="profile-container"> 
+    <!-- Comentário: o elemento do botão 'voltar' está aqui; se quiser mover, edite esta div ou os estilos no head/user.css -->
+   
+    <div class="profile-header">
+      <img src="user.png" alt="Foto de perfil" class="profile-pic"/>
+      <a href="Cadastro.html" id="loginLink"><h1 class="edit-btn">Faça login</h1></a>
+      <br>
+      <h2 class="username"id="userNameDisplay"></h2>
+      <button class="edit" id="editBtn" style="display:none;">Editar Perfil</button>
+    </div>
+    <div class="profile-info" id="infoPessoal" style="display:none;">
+      <h2 class="info">Comidas favoritas</h2>
+      <p class="Info"></p>
+      <img/>
+    </div>
+   
+  </div>
+  <script src="loader.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const loginLink = document.getElementById('loginLink');
+    const info = document.getElementById('infoPessoal');
+    const editBtn = document.getElementById('editBtn');
+    const logoutBtn = document.getElementById('log-out');
+
+    function showUser() {
+      info.style.display = 'block';
+      editBtn.style.display = 'inline-block';
+      if (loginLink) loginLink.style.display = 'none';
+      // Exibe o nome salvo no cadastro
+      const nome = sessionStorage.getItem('userName');
+      const nameEl = document.getElementById('userNameDisplay');
+      if (nameEl && nome) {
+        nameEl.textContent = nome;
+        nameEl.style.display = 'block';
+      }
+      logoutBtn.style.display = 'inline-block';
+    }
+
+    function hideUser() {
+      info.style.display = 'none';
+      editBtn.style.display = 'none';
+      const nameEl = document.getElementById('userNameDisplay');
+      if (nameEl) {
+        nameEl.textContent = '';
+        nameEl.style.display = 'none';
+      }
+      if (loginLink) loginLink.style.display = 'block';
+      logoutBtn.style.display = 'none';
+    }
+
+    // Mostrar estado com base em sessionStorage (defina 'registered' = 'true' em Cadastro.html após cadastro)
+    if (sessionStorage.getItem('registered') === 'true') {
+      showUser();
+    } else {
+      hideUser();
+    }
+
+    // Logout limpa a flag e esconde informações
+    logoutBtn.addEventListener('click', function() {
+      sessionStorage.removeItem('registered');
+      hideUser();
+    });
+  });
+  </script>
+</body>
+</html>
